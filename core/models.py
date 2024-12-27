@@ -27,6 +27,7 @@ class User(AbstractUser):
     address = models.TextField(null=True, blank=True)
 
     # Medical details
+    Emergency_Contact = models.CharField(max_length=15,null=True,blank=True)
     blood_group = models.CharField(max_length=5, null=True, blank=True)
     existing_health_issues = models.TextField(null=True, blank=True)
     existing_medication = models.TextField(null=True, blank=True)
@@ -49,9 +50,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    display = models.BooleanField(default=False)  # True to show the details
-    #mark_as_lost = models.BooleanField(default=False)  # True if the product is marked as lost
-    #
+    display = models.BooleanField(default=True)  # True to show the details
     note = models.TextField(null=True, blank=True)  
     reward_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)  
 
