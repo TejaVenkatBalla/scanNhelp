@@ -29,7 +29,9 @@ def scan_tag(request):
             product_info = {
                 "product_name": product.product_name,
                 "owner": product.owner.name,
-                "description": product.description,                
+                "description": product.description,   
+                "tag_id":tag_id,
+                "tag_type":tag_type             
             }
             contact_info = {
                 "name": product.contact_name,
@@ -47,7 +49,9 @@ def scan_tag(request):
             product_info = {
                 "product_name": product.product_name,
                 "owner": product.owner.name,
-                "description": product.description,                
+                "description": product.description,   
+                "tag_id":tag_id,
+                "tag_type":tag_type
             }
             contact_info = {
                 "name": product.contact_name,
