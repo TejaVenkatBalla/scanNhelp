@@ -26,15 +26,7 @@ class User(AbstractUser):
     alternate_number = models.CharField(max_length=15, null=True, blank=True)  
     address = models.TextField(null=True, blank=True)
 
-    # Medical details
-    Emergency_Contact = models.CharField(max_length=15,null=True,blank=True)
-    blood_group = models.CharField(max_length=5, null=True, blank=True)
-    existing_health_issues = models.TextField(null=True, blank=True)
-    existing_medication = models.TextField(null=True, blank=True)
-    primary_doctor = models.CharField(max_length=255, null=True, blank=True)
-    allergies = models.TextField(null=True, blank=True)
-    physically_disabled = models.BooleanField(default=False)
-
+    
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
@@ -45,14 +37,46 @@ class User(AbstractUser):
 
 
 class Product(models.Model):
+
     tag_id = models.IntegerField(unique=True)
     tag_type = models.IntegerField(blank=True)
-    name = models.CharField(max_length=100)
+
+    #common
+    product_name = models.CharField(max_length=100)
     description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     display = models.BooleanField(default=True)  # True to show the details
+    
+    #contact info
+    contact_name = models.CharField(max_length=100, null=True, blank=True)
+    contact_phone = models.CharField(max_length=15, null=True, blank=True)
+    contact_alternate_number = models.CharField(max_length=15, null=True, blank=True)
+    contact_address = models.TextField(null=True, blank=True)
+    
+    #reward section only for tag_type=1
     note = models.TextField(null=True, blank=True)  
     reward_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)  
+    
+    # Medical details only for tag_type=2
+    Emergency_Contact = models.CharField(max_length=15,null=True,blank=True)
+    blood_group = models.CharField(max_length=5, null=True, blank=True)
+    existing_health_issues = models.TextField(null=True, blank=True)
+    existing_medication = models.TextField(null=True, blank=True)
+    primary_doctor = models.CharField(max_length=255, null=True, blank=True)
+    allergies = models.TextField(null=True, blank=True)
+    physically_disabled = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        # Assign owner's details to contact info fields if they are not already set
+        if not self.contact_name:
+            self.contact_name = self.owner.name
+        if not self.contact_phone:
+            self.contact_phone = self.owner.phone
+        if not self.contact_alternate_number:
+            self.contact_alternate_number = self.owner.alternate_number
+        if not self.contact_address:
+            self.contact_address = self.owner.address
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return self.product_name

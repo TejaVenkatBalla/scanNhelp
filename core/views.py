@@ -26,33 +26,45 @@ def scan_tag(request):
 
     if product and product.display:  # If tag exists
         if product.tag_type == 1:  # For products, return owner contact details
-            owner_data = {
-                "email": product.owner.email,
-                "phone": product.owner.phone,
-                "alternate_number": product.owner.alternate_number,
-                "address": product.owner.address,
-                "note": product.note,
-                "reward_amount": product.reward_amount,
+            product_info = {
+                "Product Name": product.product_name,
+                "Owner": product.owner.name,
+                "Description" : product.description,                
             }
-            return JsonResponse({"product": product.name, "owner": owner_data}, status=200)
+            contact_info = {
+                "Name": product.contact_name,
+                "Phone Number": product.contact_phone,
+                "Alternate Number": product.contact_alternate_number,
+                "Address": product.contact_address,
+            }
+            reward_info = {
+                "Reward Amount": product.reward_amount,
+                "Note": product.note,
+            }
+            return JsonResponse({"Product Information": product_info, "Contact Information": contact_info, "Reward Information": reward_info}, status=200)
 
         if product.tag_type == 2:  # For vehicles, return owner medical details
-            owner_data = {
-                "email": product.owner.email,
-                "phone": product.owner.phone,
-                "alternate_number": product.owner.alternate_number,
-                "address": product.owner.address
+            product_info = {
+                "Product Name": product.product_name,
+                "Owner": product.owner.name,
+                "Description" : product.description,                
+            }
+            contact_info = {
+                "Name": product.contact_name,
+                "Phone Number": product.contact_phone,
+                "Alternate Number": product.contact_alternate_number,
+                "Address": product.contact_address,
             }
             medical_data = {
-                "Emergency_Contact":product.owner.Emergency_Contact,
-                "blood_group": product.owner.blood_group,
-                "existing_health_issues": product.owner.existing_health_issues,
-                "existing_medication": product.owner.existing_medication,
-                "primary_doctor": product.owner.primary_doctor,
-                "allergies": product.owner.allergies,
-                "physically_disabled": product.owner.physically_disabled,
+                "Emergency Contact":product.Emergency_Contact,
+                "Blood Group": product.blood_group,
+                "Existing Health Issues": product.existing_health_issues,
+                "Existing Medication": product.existing_medication,
+                "Primary Doctor": product.primary_doctor,
+                "Allergies": product.allergies,
+                "Physically Disabled": product.physically_disabled,
             }
-            return JsonResponse({"vehicle": product.name, "owner": owner_data,"medical_details": medical_data}, status=200)
+            return JsonResponse({"Product Information": product_info, "Contact Information": contact_info,"Medical Details": medical_data}, status=200)
 
     elif product and not product.display:  # If tag exists but not displayed
         return JsonResponse({"Message": "product display is off"}, status=200)
@@ -60,31 +72,6 @@ def scan_tag(request):
     else:
         return JsonResponse({"error": "Product not found please Login/Register and add the product"}, status=200)
     
-        #   # If tag does not exist, register the product/vehicle
-        # user = request.user  # Assuming you want to associate the tag with the logged-in user
-        
-        # if not user or not user.is_authenticated:
-        #     return JsonResponse({"error": "User not authenticated"}, status=401)
-
-        # # Get product/vehicle details from the request body
-        # name = request.data.get('name')
-        # description = request.data.get('description')
-
-        # if not name or not description:
-        #     return JsonResponse({"error": "Name and description are required"}, status=400)
-
-        # # Register the product/vehicle to the logged-in user
-        # try:
-        #     product = Product.objects.create(
-        #         name=name,
-        #         description=description,
-        #         tag_id=tag_id,
-        #         tag_type=tag_type,
-        #         owner=user
-        #     )
-        #     return JsonResponse(ProductSerializer(product).data, status=201)
-        # except Exception as e:
-        #     return JsonResponse({"error": str(e)}, status=400)
 
 
 @api_view(['GET'])
@@ -126,8 +113,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class ProductView(APIView):
-
-    #authentication_classes = [TokenAuthentication]  # Use JWTAuthentication if you are using SimpleJWT
     permission_classes = [IsAuthenticated]          # Ensures only authenticated users can access this view
 
     
