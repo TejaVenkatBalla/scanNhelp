@@ -27,47 +27,46 @@ def scan_tag(request):
     if product and product.display:  # If tag exists
         if product.tag_type == 1:  # For products, return owner contact details
             product_info = {
-                "Product Name": product.product_name,
-                "Owner": product.owner.name,
-                "Description" : product.description,                
+                "product_name": product.product_name,
+                "owner": product.owner.name,
+                "description": product.description,                
             }
             contact_info = {
-                "Name": product.contact_name,
-                "Phone Number": product.contact_phone,
-                "Alternate Number": product.contact_alternate_number,
-                "Address": product.contact_address,
+                "name": product.contact_name,
+                "phone_number": product.contact_phone,
+                "alternate_number": product.contact_alternate_number,
+                "address": product.contact_address,
             }
             reward_info = {
-                "Reward Amount": product.reward_amount,
-                "Note": product.note,
+                "reward_amount": product.reward_amount,
+                "note": product.note,
             }
-            return JsonResponse({"Product Information": product_info, "Contact Information": contact_info, "Reward Information": reward_info}, status=200)
+            return JsonResponse({"product_information": product_info, "contact_information": contact_info, "reward_information": reward_info}, status=200)
 
         if product.tag_type == 2:  # For vehicles, return owner medical details
             product_info = {
-                "Product Name": product.product_name,
-                "Owner": product.owner.name,
-                "Description" : product.description,                
+                "product_name": product.product_name,
+                "owner": product.owner.name,
+                "description": product.description,                
             }
             contact_info = {
-                "Name": product.contact_name,
-                "Phone Number": product.contact_phone,
-                "Alternate Number": product.contact_alternate_number,
-                "Address": product.contact_address,
+                "name": product.contact_name,
+                "phone_number": product.contact_phone,
+                "alternate_number": product.contact_alternate_number,
+                "address": product.contact_address,
             }
             medical_data = {
-                "Emergency Contact":product.Emergency_Contact,
-                "Blood Group": product.blood_group,
-                "Existing Health Issues": product.existing_health_issues,
-                "Existing Medication": product.existing_medication,
-                "Primary Doctor": product.primary_doctor,
-                "Allergies": product.allergies,
-                "Physically Disabled": product.physically_disabled,
+                "emergency_contact": product.Emergency_Contact,
+                "blood_group": product.blood_group,
+                "existing_health_issues": product.existing_health_issues,
+                "existing_medication": product.existing_medication,
+                "primary_doctor": product.primary_doctor,
+                "allergies": product.allergies,
+                "physically_disabled": product.physically_disabled,
             }
-            return JsonResponse({"Product Information": product_info, "Contact Information": contact_info,"Medical Details": medical_data}, status=200)
-
+            return JsonResponse({"product_information": product_info, "contact_information": contact_info, "medical_details": medical_data}, status=200)
     elif product and not product.display:  # If tag exists but not displayed
-        return JsonResponse({"Message": "product display is off"}, status=200)
+        return JsonResponse({"message": "product display is off"}, status=200)
     
     else:
         return JsonResponse({"error": "Product not found please Login/Register and add the product"}, status=200)
