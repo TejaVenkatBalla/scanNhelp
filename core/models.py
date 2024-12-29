@@ -45,7 +45,7 @@ class Product(models.Model):
     product_name = models.CharField(max_length=100)
     description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    display = models.BooleanField(default=True)  # True to show the details
+    display = models.BooleanField(default=False)  # True to show the details
     
     #contact info
     contact_name = models.CharField(max_length=100, null=True, blank=True)
