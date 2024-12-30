@@ -22,67 +22,58 @@ def scan_tag(request):
         return JsonResponse({"error": "tag_id and tag_type are required"}, status=400)
 
     # Check if the tag is already registered
-    try:
-        product = Product.objects.get(tag_id=tag_id, tag_type=tag_type)
+    product = Product.objects.filter(tag_id=tag_id, tag_type=tag_type).first()
 
-   
-        if product and product.display:  # If tag exists
-            if product.tag_type == 1:  # For products, return owner contact details
-                product_info = {
-                    "product_name": product.product_name,
-                    "owner": product.owner.name,
-                    "description": product.description,
-                    "tag_id": tag_id,
-                    "tag_type": tag_type             
-                }
-                contact_info = {
-                    "name": product.contact_name,
-                    "phone_number": product.contact_phone,
-                    "alternate_number": product.contact_alternate_number,
-                    "address": product.contact_address,
-                }
-                reward_info = {
-                    "reward_amount": product.reward_amount,
-                    "note": product.note,
-                }
-                return JsonResponse({"product_information": product_info, "contact_information": contact_info, "reward_information": reward_info}, status=200)
+    if product and product.display:  # If tag exists
+        if product.tag_type == 1:  # For products, return owner contact details
+            product_info = {
+                "product_name": product.product_name,
+                "owner": product.owner.name,
+                "description": product.description,   
+                "tag_id":tag_id,
+                "tag_type":tag_type             
+            }
+            contact_info = {
+                "name": product.contact_name,
+                "phone_number": product.contact_phone,
+                "alternate_number": product.contact_alternate_number,
+                "address": product.contact_address,
+            }
+            reward_info = {
+                "reward_amount": product.reward_amount,
+                "note": product.note,
+            }
+            return JsonResponse({"product_information": product_info, "contact_information": contact_info, "reward_information": reward_info}, status=200)
 
-            if product.tag_type == 2:  # For vehicles, return owner medical details
-                product_info = {
-                    "product_name": product.product_name,
-                    "owner": product.owner.name,
-                    "description": product.description,
-                    "tag_id": tag_id,
-                    "tag_type": tag_type
-                }
-                contact_info = {
-                    "name": product.contact_name,
-                    "phone_number": product.contact_phone,
-                    "alternate_number": product.contact_alternate_number,
-                    "address": product.contact_address,
-                }
-                medical_data = {
-                    "emergency_contact": product.Emergency_Contact,
-                    "blood_group": product.blood_group,
-                    "existing_health_issues": product.existing_health_issues,
-                    "existing_medication": product.existing_medication,
-                    "primary_doctor": product.primary_doctor,
-                    "allergies": product.allergies,
-                    "physically_disabled": product.physically_disabled,
-                }
-                return JsonResponse({"product_information": product_info, "contact_information": contact_info, "medical_details": medical_data}, status=200)
-
-        elif product and not product.display:  # If tag exists but not displayed
-            return JsonResponse({"message": "Product display is off"}, status=200)
-
-        else:
-            return JsonResponse({"error": "Error: The specified product does not exist or is not registered. Please log in/register to add the product."}, status=400)
-
-    except Exception as e:
-        return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
-
-
+        if product.tag_type == 2:  # For vehicles, return owner medical details
+            product_info = {
+                "product_name": product.product_name,
+                "owner": product.owner.name,
+                "description": product.description,   
+                "tag_id":tag_id,
+                "tag_type":tag_type
+            }
+            contact_info = {
+                "name": product.contact_name,
+                "phone_number": product.contact_phone,
+                "alternate_number": product.contact_alternate_number,
+                "address": product.contact_address,
+            }
+            medical_data = {
+                "emergency_contact": product.Emergency_Contact,
+                "blood_group": product.blood_group,
+                "existing_health_issues": product.existing_health_issues,
+                "existing_medication": product.existing_medication,
+                "primary_doctor": product.primary_doctor,
+                "allergies": product.allergies,
+                "physically_disabled": product.physically_disabled,
+            }
+            return JsonResponse({"product_information": product_info, "contact_information": contact_info, "medical_details": medical_data}, status=200)
+    elif product and not product.display:  # If tag exists but not displayed
+        return JsonResponse({"message": "product display is off"}, status=200)
     
+    else:
+        return JsonResponse({"error": "Product not found please Login/Register and add the product"}, status=200)
     
 
 
