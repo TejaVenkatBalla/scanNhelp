@@ -1,0 +1,1 @@
+web: gunicorn scanNhelp.wsgi:application --log-file -
